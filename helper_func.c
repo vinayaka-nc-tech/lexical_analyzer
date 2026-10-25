@@ -40,14 +40,22 @@ int tokenize(char *str)
     int length = 0;
     int temp = 0;
     for (int i = 0; str[i]; i++)
-    {
-        if (temp = is_operator(str[i]))
+    {   if(str[i]=='#')
+        {
+            while (str[i] && str[i] != '\n')
+            {
+                i++;
+                length++;
+            }
+            word_is(str + (i - length), length);
+        }
+        else if (temp=is_operator(str[i]))
         {
             word_is(str + (i - length), length);
             printf("%-5c : %s Operator\n", str[i], operators_names[temp - 1]);
             length = 0;
         }
-        else if (temp = is_symbol(str[i]))
+        else if (temp=is_symbol(str[i]))
         {
             word_is(str + (i - length), length);
             printf("%-5c : %s symbol\n", str[i], symbols_names[temp - 1]);
@@ -183,13 +191,20 @@ void word_is(char *str1, int n)
     {
         return;
     }
+
     char *str = malloc(n + 1);
     for (int i = 0; i < n; i++)
     {
         str[i] = str1[i];
     }
     str[n] = '\0';
-    if (is_reserved_keyword(str))
+    if(str[0]=='#')
+    {
+        printf("%-5.5s : ", str);
+        printf("Pre-processor directive\n");
+        return;
+    }
+    else if (is_reserved_keyword(str))
     {
         printf("%-5.5s : ", str);
         printf("Reserved keyword\n");
